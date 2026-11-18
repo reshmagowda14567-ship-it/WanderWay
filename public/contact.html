@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - WanderWay</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eefafa;
+            color: #333;
+        }
+
+        nav {
+            background: #087e8b;
+            padding: 18px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 12px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #087e8b;
+            margin-top: 35px;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 90%;
+            margin: 30px auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .info, .contact-form {
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px #0001;
+        }
+
+        h2 {
+            color: #087e8b;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 7px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+        }
+
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 7px;
+            background: #ff914d;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #ed7731;
+        }
+
+        #message {
+            text-align: center;
+        }
+
+        footer {
+            background: #087e8b;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="packages.html">Packages</a>
+    <a href="booking.html">Booking</a>
+    <a href="my_bookings.html">My Bookings</a>
+    <a href="contact.html">Contact</a>
+    <a href="login.html">Login</a>
+</nav>
+
+<h1>Contact WanderWay</h1>
+<p style="text-align:center;">We would love to hear from you!</p>
+
+<div class="container">
+
+    <div class="info">
+        <h2>Get In Touch</h2>
+
+        <p>📍 Address: Hubballi, Karnataka, India</p>
+        <p>📧 Email: wanderway@example.com</p>
+        <p>📞 Phone: +91 9876543210</p>
+
+        <h2>Working Hours</h2>
+        <p>Monday – Saturday</p>
+        <p>9:00 AM – 6:00 PM</p>
+    </div>
+
+    <div class="contact-form">
+        <h2>Send Us a Message</h2>
+
+        <form id="contactForm">
+
+            <label>Your Name</label>
+            <input type="text" id="name" required placeholder="Enter your name">
+
+            <label>Email Address</label>
+            <input type="email" id="email" required placeholder="Enter your email">
+
+            <label>Subject</label>
+            <input type="text" id="subject" required placeholder="Enter subject">
+
+            <label>Your Message</label>
+            <textarea id="userMessage" required placeholder="Write your message"></textarea>
+
+            <button type="submit">Send Message</button>
+
+        </form>
+
+        <p id="message"></p>
+    </div>
+
+</div>
+
+<footer>
+    © 2026 WanderWay | Tourist Package Management System
+</footer>
+
+<script>
+document.getElementById("contactForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const subject = document.getElementById("subject").value;
+    const message = document.getElementById("userMessage").value;
+
+    const result = document.getElementById("message");
+
+    try {
+        const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name,
+                email,
+                subject,
+                message
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            result.style.color = "green";
+            result.textContent = data.message;
+            document.getElementById("contactForm").reset();
+        } else {
+            result.style.color = "red";
+            result.textContent = data.message;
+        }
+
+    } catch (error) {
+        result.style.color = "red";
+        result.textContent = "Unable to connect to server.";
+    }
+});
+</script>
+
+</body>
+</html>

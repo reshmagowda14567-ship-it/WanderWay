@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bookings - WanderWay</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eaf8f8;
+        }
+
+        nav {
+            background: #087e8b;
+            padding: 18px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 12px;
+            font-weight: bold;
+        }
+
+        h1 {
+            text-align: center;
+            color: #087e8b;
+            margin-top: 35px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 30px auto;
+        }
+
+        .booking {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0001;
+        }
+
+        .booking h2 {
+            color: #087e8b;
+        }
+
+        .booking p {
+            line-height: 1.7;
+        }
+
+        .empty {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="booking.html">Booking</a>
+    <a href="my_bookings.html">My Bookings</a>
+    <a href="login.html">Login</a>
+</nav>
+
+<h1>My Tourist Bookings</h1>
+
+<div class="container" id="bookingList">
+    <p style="text-align:center;">Loading bookings...</p>
+</div>
+
+<script>
+async function loadBookings() {
+    const container = document.getElementById("bookingList");
+
+    try {
+        const response = await fetch("/api/bookings");
+        const bookings = await response.json();
+
+        if (!bookings.length) {
+            container.innerHTML = `
+                <div class="empty">
+                    <h2>No bookings found!</h2>
+                    <p>You have not booked any tourist packages yet.</p>
+                    <a href="packages.html">Explore Packages</a>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = bookings.map(booking => `
+            <div class="booking">
+                <h2>${booking.destination}</h2>
+                <p><b>Booking ID:</b> ${booking.id}</p>
+                <p><b>Name:</b> ${booking.name}</p>
+                <p><b>Email:</b> ${booking.email}</p>
+                <p><b>Phone:</b> ${booking.phone}</p>
+                <p><b>Travel Date:</b> ${booking.date}</p>
+                <p><b>Number of Travellers:</b> ${booking.travellers}</p>
+                <p><b>Status:</b> Booking Received</p>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        container.innerHTML = "<p>Unable to load bookings. Please try again.</p>";
+    }
+}
+
+loadBookings();
+</script>
+
+</body>
+</html>

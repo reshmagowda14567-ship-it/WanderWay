@@ -1,0 +1,144 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - WanderWay</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(120deg, #dff6f5, #fff1df);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: #087e8b;
+            padding: 18px;
+            text-align: center;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 420px;
+            margin: 60px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px #0002;
+        }
+
+        h1 {
+            text-align: center;
+            color: #087e8b;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            background: #087e8b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 12px;
+        }
+
+        button:hover {
+            background: #06636d;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="packages.html">Packages</a>
+    <a href="register.html">Register</a>
+</nav>
+
+<div class="container">
+    <h1>Welcome Back!</h1>
+    <p>Login to your WanderWay account</p>
+
+    <form id="loginForm">
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <input type="password" id="password" placeholder="Enter Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <p id="message"></p>
+    <p>Don't have an account? <a href="register.html">Register here</a></p>
+</div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const message = document.getElementById("message");
+
+    try {
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email, password })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            message.style.color = "green";
+            message.textContent = "Login successful! Welcome to WanderWay.";
+
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 1200);
+        } else {
+            message.style.color = "red";
+            message.textContent = result.message || "Login failed.";
+        }
+    } catch (error) {
+        message.style.color = "red";
+        message.textContent = "Cannot connect to the server. Please try again.";
+    }
+});
+</script>
+
+</body>
+</html>
+```

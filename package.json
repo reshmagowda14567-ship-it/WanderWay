@@ -1,0 +1,19 @@
+
+{
+  "name": "touristpackagemanagementsystem",
+  "version": "1.0.0",
+  "description": "WanderWay Tourist Package Management System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "express": "^5.3.0",
+    "express-session": "^1.19.0"
+  }
+}

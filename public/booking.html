@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Your Tour - WanderWay</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f7fa;
+}
+
+header {
+    background: white;
+    padding: 20px 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 10px #ddd;
+}
+
+.logo {
+    color: #087e8b;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.container {
+    max-width: 850px;
+    margin: 45px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px #ddd;
+}
+
+h1 {
+    text-align: center;
+    color: #087e8b;
+    margin-bottom: 12px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin: 18px 0 9px;
+    font-weight: bold;
+    color: #333;
+}
+
+input, select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 17px;
+}
+
+button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 17px;
+    border: none;
+    background: #087e8b;
+    color: white;
+    font-size: 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #055c65;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#message {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    line-height: 1.6;
+}
+
+footer {
+    background: #087e8b;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 50px;
+}
+
+@media(max-width:700px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .container {
+        margin: 25px 15px;
+        padding: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">WanderWay</div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <h1>Book Your Dream Tour</h1>
+
+    <p class="subtitle">
+        Fill in your details to book your favourite destination.
+    </p>
+
+    <form id="bookingForm">
+
+        <label>Full Name</label>
+        <input type="text" id="name"
+        placeholder="Enter your full name" required>
+
+        <label>Email Address</label>
+        <input type="email" id="email"
+        placeholder="Enter your email" required>
+
+        <label>Phone Number</label>
+        <input type="tel" id="phone"
+        placeholder="Enter 10-digit phone number"
+        pattern="[0-9]{10}" maxlength="10" required>
+
+        <label>Select Destination</label>
+        <select id="destination" required>
+            <option value="">Choose Destination</option>
+            <option value="Manali">Manali</option>
+            <option value="Goa">Goa</option>
+            <option value="Bali">Bali</option>
+            <option value="Agra">Agra</option>
+            <option value="Jaipur">Jaipur</option>
+            <option value="Kerala">Kerala</option>
+            <option value="New York">New York</option>
+            <option value="Dubai">Dubai</option>
+            <option value="Paris">Paris</option>
+        </select>
+
+        <label>Travel Date</label>
+        <input type="date" id="travelDate" required>
+
+        <label>Number of Travellers</label>
+        <input type="number" id="travellers"
+        min="1" max="20" value="1" required>
+
+        <button type="submit" id="submitBtn">
+            Confirm Booking
+        </button>
+
+        <p id="message"></p>
+
+    </form>
+
+</div>
+
+<footer>
+    <p>© 2026 WanderWay | Tourist Package Management System</p>
+</footer>
+
+<script>
+
+const form = document.getElementById("bookingForm");
+const message = document.getElementById("message");
+const destination = document.getElementById("destination");
+
+// Get destination from URL
+const params = new URLSearchParams(window.location.search);
+const selectedPlace = params.get("place");
+
+if (selectedPlace) {
+    const option = [...destination.options].find(
+        option => option.value.toLowerCase() === selectedPlace.toLowerCase()
+    );
+
+    if (option) {
+        destination.value = option.value;
+    }
+}
+
+// Prevent past dates
+const dateInput = document.getElementById("travelDate");
+
+const today = new Date();
+
+const localToday = new Date(
+    today.getTime() - today.getTimezoneOffset() * 60000
+).toISOString().split("T")[0];
+
+dateInput.min = localToday;
+
+// Submit booking
+form.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const booking = {
+
+        name: document.getElementById("name").value.trim(),
+
+        email: document.getElementById("email").value.trim(),
+
+        phone: document.getElementById("phone").value.trim(),
+
+        destination: destination.value,
+
+        // IMPORTANT: Backend expects "date"
+        date: dateInput.value,
+
+        travellers: Number(
+            document.getElementById("travellers").value
+        )
+    };
+
+    message.style.color = "#087e8b";
+    message.textContent = "Submitting your booking...";
+
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+
+    try {
+
+        const response = await fetch("/api/bookings", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(booking)
+
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.message || "Booking failed");
+        }
+
+        // Backend returns bookingId
+        message.style.color = "green";
+
+        message.innerHTML =
+            "Booking Successful!<br>" +
+            "Your Booking ID is: " + result.bookingId;
+
+        form.reset();
+
+    } catch (error) {
+
+        message.style.color = "red";
+        message.textContent = error.message;
+
+    } finally {
+
+        submitBtn.disabled = false;
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
